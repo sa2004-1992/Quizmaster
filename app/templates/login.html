@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en" data-theme="light"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login - Quiz Master</title>
+<link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}?v=2">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head>
+<body class="auth-body"><div class="auth-card">
+  <img class="auth-logo" src="{{ url_for('static', filename='img/logo.png') }}?v=2" alt="Quiz Master logo"><div class="auth-name">Quiz <b>Master</b></div>
+  <h2>Welcome back</h2><p class="muted">Login to continue your quiz journey</p>
+  {% with msgs = get_flashed_messages(with_categories=true) %}{% for c, m in msgs %}<div class="flash {{ c }}">{{ m }}</div>{% endfor %}{% endwith %}
+  <form method="post">
+    <label>Username or Email</label><input name="identifier" required autofocus>
+    <label>Password</label>
+    <div class="pw-wrap"><input type="password" name="password" required><button type="button" class="pw-toggle" aria-label="Show password">👁️</button></div>
+    <button class="btn primary block">Login</button>
+  </form>
+  <p class="muted center">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+</div><script src="{{ url_for('static', filename='js/auth.js') }}"></script></body></html>

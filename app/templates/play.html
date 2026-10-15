@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - Quiz Master{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+<div class="play" id="play" data-type="{{ qtype }}" data-key="{{ key }}" data-home="{{ url_for('main.home') }}"
+     data-after="{{ url_for('main.history') }}" data-quizzes="{{ url_for('main.quizzes') }}">
+  <div class="play-top"><a href="{{ url_for('main.home') }}" class="back">← Home</a><span>📅 {{ today }}</span><span>🧠 Quiz</span><span class="pcat">{{ icon }} {{ title }}</span></div>
+  <div class="statbar">
+    <div>❓ Question: <b id="sQ">1</b></div><div>⏱️ Time: <b id="sT">00:00</b></div>
+    <div>Hint Remaining: <b id="sH" class="hint-n">0</b></div>
+    <div>✅ Correct: <b id="sC">0</b></div><div>❌ Wrong: <b id="sW">0</b></div><div>🏆 Score: <b id="sS">0</b></div>
+  </div>
+  <div class="qcard">
+    <div class="qlabel">❓ Question:</div>
+    <h2 id="qText">Loading…</h2>
+    <div class="opts" id="opts"></div>
+    <div class="solution-box" id="solBox" hidden><div class="sol-title">📖 Explanation</div><div id="solText"></div></div>
+    <div class="qbtns">
+      <button class="btn hint" id="bHint" type="button">💡 Hint</button>
+      <button class="btn ghost" id="bPrev" type="button">← Previous Question</button>
+      <button class="btn primary" id="bNext" type="button">Next Question →</button>
+      <button class="btn pause" id="bPause" type="button">⏸ Pause</button>
+      <button class="btn green" id="bFinish" type="button">💾 Finish &amp; Save</button>
+      <button class="btn danger-outline" id="bExit" type="button">🚪 Exit</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="pauseModal"><div class="modal-box"><h3>⏸ Paused</h3><p>The timer is stopped.</p>
+  <div class="modal-actions"><button class="btn primary" id="bResume" type="button">Resume</button></div></div></div>
+<div class="modal" id="exitModal"><div class="modal-box"><h3>Exit quiz?</h3><p>Your progress in this game will <b>not</b> be saved.</p>
+  <div class="modal-actions"><button class="btn ghost" data-close type="button">Keep playing</button><button class="btn danger" id="bExitYes" type="button">Exit without saving</button></div></div></div>
+<div class="modal" id="resultModal"><div class="modal-box"><h3 id="rTitle">Quiz Saved!</h3><div id="rBody"></div>
+  <div class="modal-actions"><a class="btn ghost" id="rHist" href="#">View History</a><a class="btn primary" id="rHome" href="#">Home</a></div></div></div>
+<div class="modal" id="msgModal"><div class="modal-box"><p id="msgText"></p><div class="modal-actions"><button class="btn primary" data-close type="button">OK</button></div></div></div>
+{% endblock %}
+{% block extra_js %}<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>{% endblock %}

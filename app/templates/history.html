@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}History - Quiz Master{% endblock %}
+{% block content %}
+<h1 class="page-title">🕘 History</h1>
+<p class="muted">View all your previously played quiz games.</p>
+<form class="filters" method="get">
+  <input class="search" name="q" value="{{ q }}" placeholder="Search by game or category...">
+  <select name="category"><option value="">All Categories</option>
+    {% for n in names %}<option value="{{ n }}" {{ 'selected' if n==cat }}>{{ n }}</option>{% endfor %}</select>
+  <input type="date" name="from_date" value="{{ d1 }}" title="From"><input type="date" name="to_date" value="{{ d2 }}" title="To">
+  <button class="btn primary">Filter</button>
+</form>
+<div class="table-card">
+<table class="tbl"><thead><tr><th>Date</th><th>Game</th><th>Category Name</th><th>Time</th><th>Questions</th><th>Score</th></tr></thead><tbody>
+{% for i in items %}
+<tr><td>📅 {{ i.date }}</td><td>Game #{{ i.no }}</td>
+<td><span class="mini-ico">{{ i.icon }}</span> {{ i.cat }}{% if i.type=='daily' %} <span class="tag">Daily</span>{% elif i.type=='nq2' %} <span class="tag">All</span>{% endif %}</td>
+<td>🕒 {{ i.time }}</td><td>{{ i.q }} <span class="muted">({{ i.c }}✔ / {{ i.w }}✘)</span></td><td class="score">🏆 {{ i.score }}</td></tr>
+{% else %}<tr><td colspan="6" class="muted center">No games yet. Go play a quiz!</td></tr>{% endfor %}
+</tbody></table>
+<div class="pager"><span class="muted">Showing {{ first }} to {{ last }} of {{ total }} games</span>
+  <div>{% for p in range(1, pages+1) %}{% if p==1 or p==pages or (p-page)|abs<=1 %}
+    <a class="pg {{ 'on' if p==page }}" href="{{ url_for('main.history', page=p, q=q, category=cat, from_date=d1, to_date=d2) }}">{{ p }}</a>
+    {% elif (p-page)|abs==2 %}<span class="muted">…</span>{% endif %}{% endfor %}</div></div>
+</div>
+{% endblock %}

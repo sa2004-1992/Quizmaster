@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" data-theme="light"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register - Quiz Master</title>
+<link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}?v=2">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head>
+<body class="auth-body"><div class="auth-card">
+  <img class="auth-logo" src="{{ url_for('static', filename='img/logo.png') }}?v=2" alt="Quiz Master logo"><div class="auth-name">Quiz <b>Master</b></div>
+  <h2>Create Account</h2>
+  {% with msgs = get_flashed_messages(with_categories=true) %}{% for c, m in msgs %}<div class="flash {{ c }}">{{ m }}</div>{% endfor %}{% endwith %}
+  <form method="post">
+    <label>Full Name <span class="req">*</span></label><input name="full_name" value="{{ form.get('full_name','') }}" required>
+    <label>Email Address <span class="req">*</span></label><input type="email" name="email" value="{{ form.get('email','') }}" required>
+    <label>Username <span class="req">*</span></label><input name="username" value="{{ form.get('username','') }}" required>
+    <label>Gender <span class="req">*</span></label>
+    <div class="gender-row">
+      {% for g in genders %}<label class="gender-opt"><input type="radio" name="gender" value="{{ g }}" {{ 'checked' if form.get('gender')==g }} required><span>{{ g }}</span></label>{% endfor %}
+    </div>
+    <label>Password <span class="req">*</span></label>
+    <div class="pw-wrap"><input type="password" name="password" required minlength="6"><button type="button" class="pw-toggle" aria-label="Show password">👁️</button></div>
+    <label>Confirm Password <span class="req">*</span></label>
+    <div class="pw-wrap"><input type="password" name="confirm_password" required minlength="6"><button type="button" class="pw-toggle" aria-label="Show password">👁️</button></div>
+    <button class="btn primary block">Create Account</button>
+  </form>
+  <p class="muted center">Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
+</div><script src="{{ url_for('static', filename='js/auth.js') }}"></script></body></html>

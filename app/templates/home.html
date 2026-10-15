@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Home - Quiz Master{% endblock %}
+{% block content %}
+<h1 class="page-title">Welcome, {{ (current_user['full_name'] or current_user['username']).split(' ')[0] }}! 👋</h1>
+<p class="muted">Ready to test your knowledge? Pick a challenge below.</p>
+<div class="hero-grid">
+  <div class="hero-card daily">
+    <div class="hero-ico">📅</div><h2>Daily Challenge</h2>
+    <p>50 fresh questions every day. Play once a day to build your streak!</p>
+    <div class="streak-mini">🔥 Current streak: <b>{{ streak.current }}</b> day{{ '' if streak.current==1 else 's' }}</div>
+    {% if played_today %}<button class="btn disabled block" disabled>✔ Completed today – come back tomorrow</button>
+    {% else %}<a class="btn primary block" href="{{ url_for('main.play_daily') }}">Start Daily Challenge →</a>{% endif %}
+  </div>
+  <div class="hero-card allq">
+    <div class="hero-ico">🌐</div><h2>Play All Quiz</h2>
+    <p>Mixed questions from every topic. Unlimited length — stop whenever you like and save your progress.</p>
+    <a class="btn primary block" href="{{ url_for('main.play_nq2') }}">Play All Quiz →</a>
+  </div>
+  <div class="hero-card cats">
+    <div class="hero-ico">▦</div><h2>Choose a Category</h2>
+    <p>56 categories from Science and History to Python and Cricket.</p>
+    <a class="btn primary block" href="{{ url_for('main.quizzes') }}">Browse Quizzes →</a>
+  </div>
+</div>
+{% endblock %}

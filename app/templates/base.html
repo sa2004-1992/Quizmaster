@@ -1,1 +1,49 @@
-
+<!doctype html>
+<html lang="en" data-theme="{{ 'dark' if current_user and current_user['dark_mode'] else 'light' }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Quiz Master{% endblock %}</title>
+<link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}?v=2">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('main.home') }}">
+      <img src="{{ url_for('static', filename='img/logo.png') }}?v=2" alt="Quiz Master logo"><span>Quiz <b>Master</b></span>
+    </a>
+    <nav class="nav">
+      <a class="{{ 'active' if active=='home' }}" href="{{ url_for('main.home') }}"><span>🏠</span> Home</a>
+      <a class="{{ 'active' if active=='quizzes' }}" href="{{ url_for('main.quizzes') }}"><span>▦</span> Quizzes</a>
+      <a class="{{ 'active' if active=='history' }}" href="{{ url_for('main.history') }}"><span>🕘</span> History</a>
+      <a class="{{ 'active' if active=='leaderboard' }}" href="{{ url_for('main.leaderboard') }}"><span>🏆</span> Leaderboard</a>
+      <a class="{{ 'active' if active=='profile' }}" href="{{ url_for('main.profile') }}"><span>👤</span> Profile</a>
+      <a class="{{ 'active' if active=='all_quiz' }}" href="{{ url_for('main.all_quiz') }}"><span>📊</span> All Quiz</a>
+      <div class="nav-row"><span><span class="ico">🌙</span> Dark Mode</span>
+        <label class="switch"><input type="checkbox" id="darkToggle" {{ 'checked' if current_user and current_user['dark_mode'] }}><i></i></label></div>
+      <button class="nav-btn" id="btnLogout" type="button"><span>🚪</span> Logout</button>
+    </nav>
+    <div class="side-art"><div class="trophy">🏆</div><p>The more you play,<br>the more you learn!</p></div>
+  </aside>
+  <main class="main">
+    {% block header %}
+    <div class="topbar"><img src="{{ url_for('static', filename='img/logo.png') }}?v=2" alt="Quiz Master"><span class="topname">QUIZ <b>MASTER</b></span></div>
+    {% endblock %}
+    <div class="content">
+      {% with msgs = get_flashed_messages(with_categories=true) %}
+        {% for cat, m in msgs %}<div class="flash {{ cat }}">{{ m }}</div>{% endfor %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+<div class="modal" id="logoutModal"><div class="modal-box">
+  <h3>Logout?</h3><p>Are you sure you want to log out?</p>
+  <form method="post" action="{{ url_for('auth.logout') }}" class="modal-actions">
+    <button type="button" class="btn ghost" data-close>Cancel</button><button class="btn danger">Logout</button></form>
+</div></div>
+<script>window.TOGGLE_URL="{{ url_for('main.toggle_dark') }}";</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body></html>

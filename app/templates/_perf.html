@@ -1,0 +1,9 @@
+<div class="card"><h2 class="sec">📈 Overall Performance</h2>
+<div class="perf-grid">
+  <div class="perf"><span>Overall Accuracy</span><b>{{ '%.2f'|format(s.accuracy) }}%</b><div class="bar"><i class="g" style="width:{{ s.accuracy }}%"></i></div></div>
+  <div class="perf"><span>Average Time per Game</span><b>{{ s.avg_time }} min</b><div class="bar"><i class="p" style="width:{{ s.avg_time_pct }}%"></i></div></div>
+  <div class="perf"><span>Average Score per Game</span><b>{{ '%.2f'|format(s.avg_score) }}</b><div class="bar"><i class="o" style="width:{{ s.avg_score_pct }}%"></i></div></div>
+  <div class="perf"><span>Average Questions per Game</span><b>{{ '%.2f'|format(s.avg_questions) }}</b><div class="bar"><i class="p" style="width:{{ s.avg_q_pct }}%"></i></div></div>
+  <div class="perf"><span>Correct Answer Rate</span><b>{{ '%.2f'|format(s.correct_rate) }}%</b><div class="bar"><i class="g" style="width:{{ s.correct_rate }}%"></i></div></div>
+  <div class="perf"><span>Wrong Answer Rate</span><b>{{ '%.2f'|format(s.wrong_rate) }}%</b><div class="bar"><i class="r" style="width:{{ s.wrong_rate }}%"></i></div></div>
+</div></div>

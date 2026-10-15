@@ -1,0 +1,9 @@
+<h2 class="sec">🧠 Quiz Statistics</h2>
+<div class="stat-grid six">
+  <div class="stat"><div class="si">🎮</div><span>Total Games Played</span><b>{{ s.games }}</b></div>
+  <div class="stat"><div class="si">✅</div><span>Total Correct Answers</span><b>{{ '{:,}'.format(s.correct) }}</b></div>
+  <div class="stat"><div class="si">❌</div><span>Total Wrong Answers</span><b>{{ '{:,}'.format(s.wrong) }}</b></div>
+  <div class="stat"><div class="si">🏆</div><span>Total Score</span><b>{{ '{:,}'.format(s.score) }}</b></div>
+  <div class="stat"><div class="si">❓</div><span>Total Questions Played</span><b>{{ '{:,}'.format(s.questions) }}</b></div>
+  <div class="stat"><div class="si">⏱️</div><span>Total Time Spent</span><b>{{ s.time }}</b></div>
+</div>

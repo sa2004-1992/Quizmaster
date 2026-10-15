@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Quizzes - Quiz Master{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+<h1 class="page-title">▦ Quizzes</h1>
+<p class="muted">Choose a category and start playing quizzes</p>
+<form class="filters" method="get">
+  <input class="search" name="q" value="{{ q }}" placeholder="Search quizzes (e.g. Science, History, Python...)">
+  <button class="btn primary">Search</button>
+</form>
+<div class="cat-grid">
+  {% for c in cats %}
+  <div class="cat-card">
+    <span class="cat-no">{{ c['position'] }}</span>
+    <div class="cat-ico">{{ c['icon'] }}</div>
+    <div class="cat-name">{{ c['name'] }}</div>
+    <div class="cat-count">{{ '{:,}'.format(c['total']) }} Questions</div>
+    <a class="btn primary sm block" href="{{ url_for('main.play_nq1', key=c['key']) }}">Play Now ▶</a>
+  </div>
+  {% else %}<p class="muted">No categories match "{{ q }}".</p>{% endfor %}
+</div>
+{% endblock %}

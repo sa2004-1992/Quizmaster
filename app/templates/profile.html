@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Profile - Quiz Master{% endblock %}
+{% block content %}
+<h1 class="page-title">👤 Profile</h1>
+<p class="muted">View and manage your profile &amp; quiz statistics</p>
+<div class="profile-head card">
+  <div class="avatar big">{{ current_user['username'][0]|upper }}</div>
+  <div class="pdetails">
+    <h2>{{ current_user['full_name'] or current_user['username'] }}</h2>
+    <div>@{{ current_user['username'] }}</div>
+    <div>✉️ {{ current_user['email'] }}</div>
+    <div>📅 Joined on {{ joined }}</div>
+    {% if current_user['gender'] %}<div>🧑 {{ current_user['gender'] }}</div>{% endif %}
+    <div>📍 {{ current_user['location'] or 'India' }}</div>
+  </div>
+  <button class="btn danger-outline" id="btnClearData" type="button">🗑️ Clear All Data</button>
+</div>
+{% include "_stats.html" %}
+<div class="two-col">
+  {% include "_perf.html" %}
+  <div class="card"><h2 class="sec">🏆 Personal Records <small>(In One Game)</small></h2>
+    <table class="rec">
+      <tr><td>⭐ Highest Score<b>{{ s.best_score }}</b></td><td>Category<b class="cl">{{ s.best_score_cat }}</b></td></tr>
+      <tr><td>❓ Highest Questions Played<b>{{ s.max_q }}</b></td><td>Category<b class="cl">{{ s.max_q_cat }}</b></td></tr>
+      <tr><td>✅ Highest Correct (Answers)<b>{{ s.max_correct }}</b></td><td>Category<b class="cl">{{ s.max_correct_cat }}</b></td></tr>
+      <tr><td>❌ Highest Wrong (Answers)<b>{{ s.max_wrong }}</b></td><td>Category<b class="cl">{{ s.max_wrong_cat }}</b></td></tr>
+      <tr><td>⏱️ Highest Time Spent<b>{{ s.max_time }}</b></td><td>Category<b class="cl">{{ s.max_time_cat }}</b></td></tr>
+    </table></div>
+</div>
+<div class="card streak"><h2 class="sec">🔥 Streak</h2>
+  <div class="streak-row"><div><span>🔥 Current Streak</span><b>{{ streak.current }} Day{{ '' if streak.current==1 else 's' }}</b></div>
+  <div><span>🏆 Longest Streak</span><b>{{ streak.longest }} Day{{ '' if streak.longest==1 else 's' }}</b></div></div></div>
+<div class="card"><h2 class="sec">📊 Category Performance</h2>
+  <div class="catperf">
+  {% for c in cats %}<div class="cp"><h4>{{ c.icon }} {{ c.name }}</h4>
+    <p>Questions: <b>{{ c.q }}</b></p><p>Correct: <b>{{ c.c }}</b></p><p>Wrong: <b>{{ c.w }}</b></p><p>Accuracy: <b>{{ c.acc }}%</b></p>
+    <div class="bar"><i class="g" style="width:{{ c.acc }}%"></i></div><p class="best">Best Score: <b>{{ c.best }}</b></p></div>
+  {% else %}<p class="muted">Play a category quiz to see your performance here.</p>{% endfor %}
+  </div></div>
+<div class="modal" id="clearModal"><div class="modal-box">
+  <h3>⚠️ Clear All Data?</h3>
+  <p>This permanently deletes <b>your</b> quiz history, progress, streaks and scores (Normal Quiz 1, Play All Quiz and Daily Quiz). Your account stays. Other players are not affected. This cannot be undone.</p>
+  <form method="post" action="{{ url_for('main.clear_data') }}" class="modal-actions">
+    <button type="button" class="btn ghost" data-close>Cancel</button><button class="btn danger">Yes, clear my data</button></form>
+</div></div>
+{% endblock %}
+{% block extra_js %}<script>
+document.getElementById('btnClearData').addEventListener('click',function(){document.getElementById('clearModal').classList.add('open');});
+</script>{% endblock %}

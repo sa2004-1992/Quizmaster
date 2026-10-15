@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}All Quiz - Quiz Master{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+<h1 class="page-title">📊 All Quiz</h1>
+<p class="muted">Complete quiz statistics and performance overview (Play All Quiz)</p>
+{% include "_stats.html" %}
+<div class="stat-grid five">
+  <div class="stat"><div class="si">⭐</div><span>Highest Score in One Game</span><b>{{ s.best_score }}</b></div>
+  <div class="stat"><div class="si">📋</div><span>Highest Questions Played in One Game</span><b>{{ s.max_q }}</b></div>
+  <div class="stat"><div class="si">✅</div><span>Highest Correct Answers in One Game</span><b>{{ s.max_correct }}</b></div>
+  <div class="stat"><div class="si">❌</div><span>Highest Wrong Answers in One Game</span><b>{{ s.max_wrong }}</b></div>
+  <div class="stat"><div class="si">⏱️</div><span>Highest Time Spent in One Game</span><b>{{ s.max_time }}</b></div>
+</div>
+{% include "_perf.html" %}
+<div class="note">ℹ️ All statistics are calculated from your Play All Quiz games.</div>
+{% endblock %}
