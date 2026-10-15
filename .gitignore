@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+instance/
+.env
+*.db
+*.sqlite3
+app/data_source/*.csv
+app/data_source/categories/*.csv
