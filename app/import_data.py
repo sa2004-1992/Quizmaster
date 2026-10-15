@@ -73,9 +73,9 @@ def import_nq1(conn):
         paths = _find_dataset_parts(os.path.join(cdir, key))
         if not paths:
             continue
-        cur = conn.execute("INSERT INTO categories(key,name,icon,position,total) VALUES(?,?,?,?,0)",
-                           (key, name, icon, pos))
-        cid, n, batch = cur.lastrowid, 0, []
+        conn.execute("INSERT INTO categories(id,key,name,icon,position,total) VALUES(?,?,?,?,?,0)",
+                     (pos, key, name, icon, pos))
+        cid, n, batch = pos, 0, []  # category id == position: stable across rebuilds
         for r in _rows(paths):
             batch.append((cid, n) + _vals(r) + (r.get("Subcategory", ""),))
             n += 1
@@ -104,7 +104,7 @@ def run_import(db_path, only=None):
     Only the listed datasets are (re)imported, user data is never touched."""
     only = set(only or ("nq1", "nq2", "daily"))
     conn = sqlite3.connect(db_path)
-    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA journal_mode=MEMORY")
     conn.execute("PRAGMA synchronous=OFF")
     if "nq1" in only:
         for t in ("questions_nq1", "categories"):

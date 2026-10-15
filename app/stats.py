@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta
 
-from .db import get_db
+from .db import get_db, get_qdb
 
 
 def fmt_dur(sec):
@@ -66,10 +66,11 @@ def user_summary(user_id, quiz_types):
 def category_performance(user_id):
     db = get_db()
     rows = db.execute(
-        "SELECT g.category_name name, SUM(questions_played) q, SUM(correct) c, SUM(wrong) w, MAX(score) best, "
-        "c2.icon icon FROM game_history g LEFT JOIN categories c2 ON c2.name=g.category_name "
-        "WHERE g.user_id=? AND g.quiz_type='nq1' GROUP BY g.category_name ORDER BY q DESC", (user_id,)).fetchall()
-    return [{"name": r["name"], "icon": r["icon"] or "🎯", "q": r["q"], "c": r["c"], "w": r["w"],
+        "SELECT category_name name, SUM(questions_played) q, SUM(correct) c, SUM(wrong) w, MAX(score) best "
+        "FROM game_history WHERE user_id=? AND quiz_type='nq1' GROUP BY category_name ORDER BY q DESC",
+        (user_id,)).fetchall()
+    icons = {c["name"]: c["icon"] for c in get_qdb().execute("SELECT name, icon FROM categories")}
+    return [{"name": r["name"], "icon": icons.get(r["name"]) or "🎯", "q": r["q"], "c": r["c"], "w": r["w"],
              "acc": round(100 * r["c"] / r["q"]) if r["q"] else 0, "best": r["best"]} for r in rows]
 
 
@@ -103,4 +104,4 @@ def leaderboard_rows(period):
     return get_db().execute(
         "SELECT u.username, SUM(g.score) score, SUM(g.questions_played) q, COUNT(g.id) games, "
         f"SUM(g.time_seconds) secs FROM game_history g JOIN users u ON u.id=g.user_id {where} "
-        "GROUP BY u.id ORDER BY score DESC, q DESC, u.username", args).fetchall()
+        "GROUP BY u.id, u.username ORDER BY score DESC, q DESC, u.username", args).fetchall()

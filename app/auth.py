@@ -39,12 +39,13 @@ def register():
             flash(err, "error")
         else:
             cur = db.execute("INSERT INTO users(username,email,password_hash,full_name,gender,joined_at) "
-                             "VALUES(?,?,?,?,?,?)",
+                             "VALUES(?,?,?,?,?,?) RETURNING id",
                              (form["username"], form["email"].lower(), generate_password_hash(pw),
                               form["full_name"], form["gender"], now_iso()))
+            new_id = cur.fetchone()["id"]  # read before commit (RETURNING)
             db.commit()
             session.clear()
-            session["user_id"] = cur.lastrowid
+            session["user_id"] = new_id
             return redirect(url_for("main.home"))
     return render_template("register.html", form=form, genders=GENDER_OPTIONS)
 

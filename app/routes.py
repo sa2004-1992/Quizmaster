@@ -2,7 +2,7 @@ from datetime import datetime, date
 from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session, g, flash, abort
 
-from .db import get_db
+from .db import get_db, get_qdb
 from . import quiz_engine as qe
 from . import stats
 
@@ -37,7 +37,7 @@ def home():
 @login_required
 def quizzes():
     q = (request.args.get("q") or "").strip().lower()
-    cats = get_db().execute("SELECT * FROM categories ORDER BY position").fetchall()
+    cats = get_qdb().execute("SELECT * FROM categories ORDER BY position").fetchall()
     if q:
         cats = [c for c in cats if q in c["name"].lower() or q in c["key"].lower()]
     return render_template("quizzes.html", active="quizzes", cats=cats, q=q)
@@ -46,7 +46,7 @@ def quizzes():
 @bp.route("/play/nq1/<key>")
 @login_required
 def play_nq1(key):
-    c = get_db().execute("SELECT * FROM categories WHERE key=?", (key,)).fetchone()
+    c = get_qdb().execute("SELECT * FROM categories WHERE key=?", (key,)).fetchone()
     if not c:
         abort(404)
     return render_template("play.html", qtype="nq1", key=key, title=c["name"], icon=c["icon"],
@@ -81,7 +81,7 @@ def history():
     page = max(1, request.args.get("page", 1, type=int))
     where, args = ["user_id=?"], [uid]
     if q:
-        where.append("(category_name LIKE ? OR ('Game #' || game_no) LIKE ?)")
+        where.append("(lower(category_name) LIKE lower(?) OR lower('Game #' || CAST(game_no AS TEXT)) LIKE lower(?))")
         args += [f"%{q}%", f"%{q}%"]
     if cat:
         where.append("category_name=?")
@@ -100,7 +100,7 @@ def history():
     page = min(page, pages)
     rows = db.execute(f"SELECT * FROM game_history WHERE {w} ORDER BY played_at DESC, id DESC LIMIT ? OFFSET ?",
                       args + [per, (page - 1) * per]).fetchall()
-    icons = {c["name"]: c["icon"] for c in db.execute("SELECT name, icon FROM categories")}
+    icons = {c["name"]: c["icon"] for c in get_qdb().execute("SELECT name, icon FROM categories")}
     icons["Play All Quiz"], icons["Daily Quiz"] = "🌐", "📅"
     names = [r[0] for r in db.execute("SELECT DISTINCT category_name FROM game_history WHERE user_id=? "
                                       "ORDER BY category_name", (uid,))]

@@ -4,7 +4,7 @@ import time
 from datetime import date, timedelta
 
 from . import config
-from .db import get_db, now_iso
+from .db import get_db, get_qdb, now_iso
 
 TABLES = {"nq1": "questions_nq1", "nq2": "questions_nq2", "daily": "questions_daily"}
 
@@ -23,7 +23,7 @@ def _save(user_id, st):
 
 
 def _total(qtype, cat_id=None):
-    db = get_db()
+    db = get_qdb()
     if qtype == "nq1":
         return db.execute("SELECT total FROM categories WHERE id=?", (cat_id,)).fetchone()[0]
     return db.execute(f"SELECT COUNT(*) FROM {TABLES[qtype]}").fetchone()[0]
@@ -43,7 +43,7 @@ def start_quiz(user_id, qtype, key=None):
     db = get_db()
     cat_id, cat_name, start = None, "Play All Quiz", 0
     if qtype == "nq1":
-        c = db.execute("SELECT * FROM categories WHERE key=?", (key,)).fetchone()
+        c = get_qdb().execute("SELECT * FROM categories WHERE key=?", (key,)).fetchone()
         if not c:
             return None, "Unknown category."
         cat_id, cat_name = c["id"], c["name"]
@@ -86,7 +86,7 @@ def public_state(st):
 
 def _row(st, index):
     seq = (st["start"] + index) % st["total_ds"]
-    db = get_db()
+    db = get_qdb()
     t = TABLES[st["type"]]
     if st["type"] == "nq1":
         return db.execute(f"SELECT * FROM {t} WHERE category_id=? AND seq=?", (st["cat_id"], seq)).fetchone()
